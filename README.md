@@ -18,7 +18,7 @@ DIO   C:    D:    NET
 | Label | Metric | Source |
 | ---------- | -------- | -------- |
 | `UTL` | Processor Utility — frequency-scaled CPU load | `UsageMonitor` / `% Processor Utility` |
-| `GPU` | GPU 3D engine utilisation | `UsageMonitor` / GPU Engine |
+| `GPU` | GPU engine utilisation | `UsageMonitor` / `GPU Engine` / `Utilization Percentage` (index-based) |
 | `RAM` | Physical memory used | `Measure=PhysicalMemory` |
 | `MPS` | Memory Page Swap — bytes paged to disk as % of committed memory | Engineered from `SwapMemory` and `PhysicalMemory` |
 | `DIO` | Total disk I/O activity | `UsageMonitor` / `% Disk Time` |
@@ -61,6 +61,7 @@ Edit the `[Variables]` section in `squares2.ini` (right-click the skin → **Edi
 | `TaskbarYOffset` | Pixels from the top of the taskbar down to the skin's top edge. `2` centres a ~36px skin in a standard 40px taskbar. |
 | `FontFace`, `FontSize`, `FontColor` | Label typography. Default: MesloLGL Nerd Font 7pt white. |
 | `BackgroundColor` | Skin background in `R,G,B,A`. Set to `0,0,0,0` for fully transparent (recommended when placing on the taskbar). |
+| `GPUUsageIndex` | GPU retrieval mode for `[MeasureGPUUsage]`. `-1` = average across detected instances (safer on multi-GPU), `1` = busiest single instance (often closer to Task Manager feel). |
 | `*Color` | Per-metric bar/graph/border colour, e.g. `CPUColor`, `GPUColor`. |
 | `*BoxColor` | Per-metric square fill — same RGB as `*Color` but alpha 20. |
 | `*Label` | Display text for each square, e.g. `ProcUtilLabel = UTL`. |
@@ -77,23 +78,17 @@ MaxSpeedMbps × 1,000,000 ÷ 8
 
 Examples: 200 Mbps → `25000000` · 1 Gbps → `125000000` · 100 Mbps → `12500000`.
 
-### GPU instance
+### GPU retrieval mode
 
-`[MeasureGPUUsage]` uses a machine-specific `Instance=` string. To find yours:
+`[MeasureGPUUsage]` is intentionally **index-based** (not machine-specific), so it works across different hardware without editing `Instance=` strings.
 
-1. Open Terminal and run:
+* `GPUUsageIndex = -1`: average across detected GPU Engine instances. Good default when you want stability and to avoid summed spikes.
+* `GPUUsageIndex = 1`: busiest current GPU Engine instance. Often feels closer to Task Manager's displayed load.
 
-   ```text
-   typeperf -qx "\GPU Engine"
-   ```
+Notes:
 
-2. Find the `pid_4_…_engtype_3D` line — this is the system-wide 3D utilisation:
-
-   ```text
-   \GPU Engine(pid_4_luid_0x00000000_0x00012507_phys_0_eng_0_engtype_3D)\Utilization Percentage
-   ```
-
-3. Copy the part inside the parentheses and paste it as the `Instance=` value in `[MeasureGPUUsage]`.
+* `Index=0` is the sum of instances and can produce unintuitive values for GPU counters.
+* Small differences vs Task Manager are normal because Windows counters are aggregated differently across tools.
 
 ## Requirements
 
