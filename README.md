@@ -1,71 +1,102 @@
 # squares: system monitor skin for Rainmeter
 
-A Rainmeter skin to monitor your system resources that fits within the Windows taskbar.
+A Rainmeter skin that displays system metrics in compact squares designed to fit inside the Windows taskbar. No external dependencies — built entirely on Rainmeter's built-in measures and the `UsageMonitor` plugin (ships with Rainmeter).
 
 Inspired by [GerosMonitor 2.0](https://www.deviantart.com/geroyuni/art/GerosMonitor-for-Rainmeter-749877799).
 
-![Example of Dots in the Windows taskbar.](example.png "Dots in the Windows taskbar")
+![Example of squares in the Windows taskbar.](example.png "squares in the Windows taskbar")
+
+## Layout
+
+`squares2.ini` displays 8 metrics in a 4×2 grid:
+
+```text
+UTL   GPU   RAM   MPS
+DIO   C:    D:    NET
+```
+
+| Label | Metric | Source |
+| ---------- | -------- | -------- |
+| `UTL` | Processor Utility — frequency-scaled CPU load | `UsageMonitor` / `% Processor Utility` |
+| `GPU` | GPU 3D engine utilisation | `UsageMonitor` / GPU Engine |
+| `RAM` | Physical memory used | `Measure=PhysicalMemory` |
+| `MPS` | Memory Page Swap — bytes paged to disk as % of committed memory | Engineered from `SwapMemory` and `PhysicalMemory` |
+| `DIO` | Total disk I/O activity | `UsageMonitor` / `% Disk Time` |
+| `C:` | C: drive space used | `Measure=FreeDiskSpace` |
+| `D:` | D: drive space used | `Measure=FreeDiskSpace` |
+| `NET` | Network throughput as % of max speed | `Measure=NetTotal` |
+
+Hover over any square to expand it into a real-time line graph. Mouse away to collapse.
 
 ## Features
 
-* **Compact:** Displays key system metrics in the Windows taskbar using Rainmeter's built-in plugins.
-* **Monitoring:** Keep an eye on CPU, RAM, disk usage (C: and D: drives), network activity (download/upload), memory pressure (basic), and GPU utilization.
-* **Graphs:** Hover over each metric's square to reveal a real-time graph.
-* **Customizable:** Easily adjust fonts, colors, labels, and layout directly from the skin's variables.
-
-
+* **Compact:** Fits inside the Windows taskbar — no desktop real estate consumed.
+* **Dependency-free:** Uses only Rainmeter's built-in measures and `UsageMonitor` (bundled with Rainmeter).
+* **Engineered metrics:** `MPS` (Memory Page Swap) is derived from existing measures to surface memory pressure beyond simple RAM fill.
+* **Resolution scaling:** Set `ScaleFactor = 1` for 1920×1080, or `1.11` for 1920×1200 — all dimensions scale proportionally from a single variable.
+* **Hover graphs:** Each square expands on hover to reveal a scrolling line graph.
+* **Refined UI:** Rounded corners, per-metric subtle glow, and a curated colour palette.
 
 ## Installation
 
-1.  If you don't have it, download and install Rainmeter from the [official website](https://www.rainmeter.net/).
-2.  Download the ZIP file of this repository and extract its contents to your Rainmeter skins folder (usually in `Documents\Rainmeter\Skins`).
-3.  Load the skin.
-      1. Right-click the Rainmeter icon in the System Tray, and select **Manage**.
-      2. Select **Refresh all** in the Rainmeter manage window.
-      3. Expand `squares` (or the name you give your skin folder).
-      4. Select `squares.ini` and select **Load** to load the skin.
-      5. Set the skin position to **Stay topmost**.
-4. Position the skin on the taskbar.
+1. Download and install [Rainmeter](https://www.rainmeter.net/) if you haven't already.
+2. Download the ZIP of this repository and extract it to your Rainmeter skins folder (usually `Documents\Rainmeter\Skins`).
+3. Load the skin:
+   1. Right-click the Rainmeter tray icon → **Manage**.
+   2. Click **Refresh all**.
+   3. Expand `squares` (or whatever you named the folder).
+   4. Select `squares2.ini` → **Load**.
+   5. Set the skin position to **Stay topmost**.
+4. Drag the skin onto your taskbar.
 
 ## Customization
 
-You can customize the skin by editing the `[Variables]` section in the `.ini` file.
+Edit the `[Variables]` section in `squares2.ini` (right-click the skin → **Edit skin**), then right-click → **Refresh skin** to apply.
 
-1.  Right-click on the skin on your desktop.
-2.  Select **Edit skin**.
-3.  Modify the variables under the `[Variables]` section.
-4.  Save the file and then right-click on the skin and select **Refresh skin** to apply changes.
+| Variable | Description |
+| ---------- | ------------- |
+| `ScaleFactor` | `1.0` = 1920×1080 · `1.11` = 1920×1200. Scales all dimensions proportionally. |
+| `FontFace`, `FontSize`, `FontColor` | Label typography. Default: MesloLGL Nerd Font 7pt white. |
+| `BackgroundColor` | Skin background in `R,G,B,A`. Set to `0,0,0,0` for fully transparent (recommended when placing on the taskbar). |
+| `*Color` | Per-metric bar/graph/border colour, e.g. `CPUColor`, `GPUColor`. |
+| `*BoxColor` | Per-metric square fill — same RGB as `*Color` but alpha 20. |
+| `*Label` | Display text for each square, e.g. `ProcUtilLabel = UTL`. |
+| `SquareSize`, `GraphWidth`, `Spacing`, `BarPadding`, `LabelWidth`, `LabelPadding` | Dimensions and spacing (all multiplied by `ScaleFactor`). |
+| `ColsUsed`, `RowsUsed` | Grid dimensions for background auto-sizing. |
 
-Here's a breakdown of the key customizable variables:
+### Network speed
 
-* **`FontFace`**, **`FontSize`**, **`FontColor`**: Adjust the appearance of the text.
-* **`BackgroundColor`**, **`BorderColor`**: Change the overall background and border of the skin.
-* **`CPUColor`**, **`RAMColor`**, etc.: Set the colors for each individual metric's bar and graph.
-* **`CPUBoxColor`**, **`RAMBoxColor`**, etc.: Define the background color of each metric's square. Typically is the same as the bar/graph colors but with 20% opacity.
-* **`CPULabel`**, **`RAMLabel`**, etc.: Change the text labels for each metric.
-* **`SquareSize`**, **`GraphWidth`**, **`Spacing`**, **`BarPadding`**, **`LabelWidth`**, **`LabelPadding`**: Fine-tune the dimensions and spacing of the skin elements.
-* **`ColsUsed`**, **`RowsUsed`**: Adjust the number of columns and rows used by the skin to fit your desired layout.
-* **`MeasureNetworkTotal/25000000`**: In `[MeasureNetworkPct]`, the `25000000` represents the maximum network speed in bytes per second. Adjust this value to match your internet connection speed for accurate percentage readings. (e.g., for a 100 Mbps connection, it's `12500000` bytes/s (100 * 10^6 / 8)).
-* **`Instance` in `[MeasureGPUUsage]`**: If your GPU usage isn't displaying correctly, you may need to adjust the `Instance` value to match your specific GPU's 3D engine instance.
-  1. Open Terminal
-  2. Enter `typeperf -qx "\GPU Engine"` to see a dump of all counters in the GPU Engine category.
-  3. Look for lines like these:
- 
-      PID4 is the system-wide 3D utilization.
-      ```bash
-        \GPU Engine(pid_4268_luid_0x00000000_0x00012507_phys_0_eng_0_engtype_3D)\Utilization Percentage
-        \GPU Engine(pid_4_luid_0x00000000_0x00012507_phys_0_eng_0_engtype_3D)\Utilization Percentage
-      ```
-  4. Replace the instance in `[MeasureGPUUsage]`.
+In `[MeasureNetworkPct]`, adjust `25000000` to match your connection's max bytes/sec:
 
+```text
+MaxSpeedMbps × 1,000,000 ÷ 8
+```
 
+Examples: 200 Mbps → `25000000` · 1 Gbps → `125000000` · 100 Mbps → `12500000`.
+
+### GPU instance
+
+`[MeasureGPUUsage]` uses a machine-specific `Instance=` string. To find yours:
+
+1. Open Terminal and run:
+
+   ```text
+   typeperf -qx "\GPU Engine"
+   ```
+
+2. Find the `pid_4_…_engtype_3D` line — this is the system-wide 3D utilisation:
+
+   ```text
+   \GPU Engine(pid_4_luid_0x00000000_0x00012507_phys_0_eng_0_engtype_3D)\Utilization Percentage
+   ```
+
+3. Copy the part inside the parentheses and paste it as the `Instance=` value in `[MeasureGPUUsage]`.
 
 ## Requirements
-* [Rainmeter](https://www.rainmeter.net/)
 
-## Contributing
+* [Rainmeter](https://www.rainmeter.net/) (4.5 or later recommended)
 
-Feel free to fork this repository, make improvements, and submit pull requests.
+> **`squares.ini`** is deprecated. It was the original 4-column variant using raw `Measure=CPU` and a CoreTemp dependency. Use `squares2.ini` instead.
 
 ## License
 
