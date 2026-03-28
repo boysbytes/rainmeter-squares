@@ -34,6 +34,7 @@ Hover over any square to expand it into a real-time line graph. Mouse away to co
 * **Dependency-free:** Uses only Rainmeter's built-in measures and `UsageMonitor` (bundled with Rainmeter).
 * **Engineered metrics:** `MPS` (Memory Page Swap) is derived from existing measures to surface memory pressure beyond simple RAM fill.
 * **Resolution scaling:** Set `ScaleFactor = 1` for 1920×1080, or `1.11` for 1920×1200 — all dimensions scale proportionally from a single variable.
+* **Taskbar anchoring:** Set `TaskbarX` once. On every Refresh the skin auto-moves to the correct taskbar position for the current resolution — no dragging after display changes.
 * **Hover graphs:** Each square expands on hover to reveal a scrolling line graph.
 * **Refined UI:** Rounded corners, per-metric subtle glow, and a curated colour palette.
 
@@ -56,6 +57,8 @@ Edit the `[Variables]` section in `squares2.ini` (right-click the skin → **Edi
 | Variable | Description |
 | ---------- | ------------- |
 | `ScaleFactor` | `1.0` = 1920×1080 · `1.11` = 1920×1200. Scales all dimensions proportionally. |
+| `TaskbarX` | Horizontal pixel offset from the left edge of the screen. Set once for your machine. On every **Refresh skin**, the skin moves to `(TaskbarX, taskbar top + TaskbarYOffset)` automatically. |
+| `TaskbarYOffset` | Pixels from the top of the taskbar down to the skin's top edge. `2` centres a ~36px skin in a standard 40px taskbar. |
 | `FontFace`, `FontSize`, `FontColor` | Label typography. Default: MesloLGL Nerd Font 7pt white. |
 | `BackgroundColor` | Skin background in `R,G,B,A`. Set to `0,0,0,0` for fully transparent (recommended when placing on the taskbar). |
 | `*Color` | Per-metric bar/graph/border colour, e.g. `CPUColor`, `GPUColor`. |
